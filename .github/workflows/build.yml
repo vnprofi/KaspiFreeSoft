@@ -28,12 +28,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install pyinstaller pyinstaller-hooks-contrib
+          python -m pip install -r requirements.txt
+          python -m pip install pyinstaller pyinstaller-hooks-contrib
 
       - name: Build executable with PyInstaller
         run: |
-          pyinstaller --clean --noconfirm --windowed --onefile --collect-all PyQt6 --name KaspiFreeSoft main.py
+          python -m PyInstaller --clean --noconfirm --windowed --onefile --collect-all PyQt6 --name KaspiFreeSoft main.py
 
       - name: Rename artifact (Windows)
         if: runner.os == 'Windows'
@@ -47,7 +47,9 @@ jobs:
         run: |
           mkdir -p dist
           if [ -d "dist/KaspiFreeSoft.app" ]; then \
-            cd dist && zip -r KaspiFreeSoft-macOS.zip KaspiFreeSoft.app && cd - ; \
+            cd dist && zip -rq KaspiFreeSoft-macOS.zip KaspiFreeSoft.app && cd - ; \
+          elif [ -f "dist/KaspiFreeSoft" ]; then \
+            cd dist && zip -q KaspiFreeSoft-macOS.zip KaspiFreeSoft && cd - ; \
           fi
 
       - name: Upload artifact (Windows)
